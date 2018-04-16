@@ -8,10 +8,10 @@
     <string name="title_activity_student_weekly_schedule">Student Weekly Schedule</string>
     <string name="student_weekly_schedule">Student Weekly Schedule</string>
     <string name="empty">It\'s a bit lonely here...</string>
-    <string name="empty_instruction">Get started by adding a course</string>
+    <string name="empty_instruction">Get started by adding a editCourseActivity</string>
     <string name="empty_desert">empty desert</string>
     <string name="courseName">Course Name</string>
-    <string name="courseTime">10:00 —> 12:00\n3:00 —> 5:00</string>
+    <string name="courseTime">editCourseActivity time</string>
     <string name="courseDays">Sunday \nMonday</string>
     <string name="title_activity_crudcourse">Course</string>
     <string name="pick_time">Pick time</string>
@@ -22,4 +22,6 @@
     <string name="end_date">End Time</string>
     <string name="start">Start</string>
     <string name="end">End</string>
+    <string name="courseDate">Date</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -700,7 +700,7 @@ public class RecurrencePickerDialogFragment extends DialogFragment implements On
                     }
                 }
 
-                mModel.forceHideSwitchButton = bundle.getBoolean(BUNDLE_HIDE_SWITCH_BUTTON, false);
+                mModel.forceHideSwitchButton = bundle.getBoolean(BUNDLE_HIDE_SWITCH_BUTTON, true);
             } else {
                 mTime.setToNow();
             }
@@ -718,17 +718,17 @@ public class RecurrencePickerDialogFragment extends DialogFragment implements On
             mRepeatSwitch.setVisibility(View.GONE);
             mModel.recurrenceState = RecurrenceModel.STATE_RECURRENCE;
         }
-//        else {
-//            mRepeatSwitch.setChecked(mModel.recurrenceState == RecurrenceModel.STATE_RECURRENCE);
-//            mRepeatSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//
-//                @Override
-//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    mModel.recurrenceState = isChecked ? RecurrenceModel.STATE_RECURRENCE : RecurrenceModel.STATE_NO_RECURRENCE;
-//                    togglePickerOptions();
-//                }
-//            });
-//        }
+        else {
+            mRepeatSwitch.setChecked(mModel.recurrenceState == RecurrenceModel.STATE_RECURRENCE);
+            mRepeatSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mModel.recurrenceState = isChecked ? RecurrenceModel.STATE_RECURRENCE : RecurrenceModel.STATE_NO_RECURRENCE;
+                    togglePickerOptions();
+                }
+            });
+        }
         mFreqSpinner = (Spinner) mView.findViewById(R.id.freqSpinner);
         mFreqSpinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> freqAdapter = ArrayAdapter.createFromResource(getActivity(),
