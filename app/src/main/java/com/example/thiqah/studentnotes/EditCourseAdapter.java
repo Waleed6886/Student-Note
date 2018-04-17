@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.realm.RealmResults;
-
 /**
  * Created by Thiqah on 3/29/2018.
  */
@@ -34,10 +32,10 @@ public class EditCourseAdapter extends RecyclerView.Adapter<EditCourseAdapter.Ed
     public void onBindViewHolder(EditCourseViewHolder holder, int position) {
         Course course = courseList.get(position);
         if (course != null) {
-            holder.textViewEditName.setText(course.getCourseName());
-            for (int i = 0; i < course.getCourseDateRealmList().size(); i++) {
-                holder.textViewEditTime.setText(Objects.requireNonNull(course.getCourseDateRealmList().get(i)).getTime());
-            }
+            holder.textViewName.setText(course.getCourseName());
+//            holder.textViewTime.setText(Objects.requireNonNull(course.getCourseDateRealmList().get(0)).getTime());
+//            holder.textViewDate.setText(Objects.requireNonNull(course.getCourseDateRealmList().get(0)).getDate());
+
         }
     }
 
@@ -47,21 +45,21 @@ public class EditCourseAdapter extends RecyclerView.Adapter<EditCourseAdapter.Ed
     }
 
     class EditCourseViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewEditName;
-        //        @BindView(R.id.textViewEditDate)
-//        TextView textViewEditDate;
-        private TextView textViewEditTime;
+        private TextView textViewName;
+        private TextView textViewDate;
+        private TextView textViewTime;
 
         EditCourseViewHolder(View itemView) {
             super(itemView);
-            textViewEditName = itemView.findViewById(R.id.textViewEditName);
-            textViewEditTime = itemView.findViewById(R.id.textViewEditTime);
+            textViewName = itemView.findViewById(R.id.textViewEditCourseName);
+            textViewDate = itemView.findViewById(R.id.textViewEditCourseDate);
+            textViewTime = itemView.findViewById(R.id.textViewEditCourseTime);
         }
     }
 
-    public void update(RealmResults<Course> course) {
+    public void update(Course course) {
         this.courseList.clear();
-        this.courseList.addAll(course);
+        this.courseList.add(course);
         notifyDataSetChanged();
     }
 

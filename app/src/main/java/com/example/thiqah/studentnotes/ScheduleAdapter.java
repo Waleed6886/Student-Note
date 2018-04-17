@@ -20,14 +20,12 @@ import butterknife.ButterKnife;
 import io.realm.RealmResults;
 
 
-public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.CourseViewHolder> {
+public class ScheduleAdapter extends EmptyRecyclerView.Adapter<ScheduleAdapter.CourseViewHolder> {
 
     private List<Course> courseList = new ArrayList<>();
 
     ScheduleAdapter() {
     }
-
-
 
     @NonNull
     @Override

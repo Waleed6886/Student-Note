@@ -2,18 +2,18 @@ package com.example.thiqah.studentnotes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.example.thiqah.studentnotes.Model.Course;
 
@@ -23,12 +23,21 @@ import io.realm.RealmResults;
 
 public class ScheduleActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
+    EmptyRecyclerView recyclerView;
     ScheduleAdapter scheduleAdapter;
+    private Handler mHandler;
+    private final static int DELAY = 3000;
 
     private Realm realm;
-
     SwipeRefreshLayout mySwipeRefreshLayout;
+    ConstraintLayout emptyView;
+
+    private Runnable updateAdapterRunnable = new Runnable() {
+        @Override
+        public void run() {
+            myUpdateOperation();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,44 +45,51 @@ public class ScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_schedule);
         realm = Realm.getDefaultInstance(); // opens "myrealm.realm"
 
-        setViews();
-        initializeLayoutManager();
+        initializeViews();
         initializeAdapter();
         initializeData();
-        swipeRefresh();
-
         }
 
-    //initialize Layout Manger for the adapter
-    private void initializeLayoutManager() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayout.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mHandler.postDelayed(updateAdapterRunnable, DELAY);
+        myUpdateOperation();
     }
 
-    //initialize the adapter
-    private void initializeAdapter() {
-        scheduleAdapter = new ScheduleAdapter();
-        recyclerView.setAdapter(scheduleAdapter);
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mHandler.removeCallbacks(updateAdapterRunnable);
     }
 
-    private void initializeData() {
-        final RealmResults<Course> courses = realm.where(Course.class).findAll();
-        scheduleAdapter.update(courses);
-        courses.addChangeListener(new RealmChangeListener<RealmResults<Course>>() {
-            @Override
-            public void onChange(@NonNull RealmResults<Course> courses) {
-                scheduleAdapter.update(courses);
-            }
-        });
-    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
 
-    private void setViews() {
+    }
+    //initialize Views
+    private void initializeViews() {
         recyclerView = findViewById(R.id.recycler_view);
+        emptyView = findViewById(R.id.empty_view);
         mySwipeRefreshLayout = findViewById(R.id.swiperefresh);
         setToolbar();
         setFloatingButton();
+    }
+    //initialize the adapter
+    private void initializeAdapter() {
+        scheduleAdapter = new ScheduleAdapter();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setEmptyView(findViewById(R.id.empty_view));
+        recyclerView.setAdapter(scheduleAdapter);
+
+        mHandler = new Handler();
+    }
+    //initialize data
+    private void initializeData() {
+        myUpdateOperation();
     }
 
     private void setFloatingButton() {
@@ -130,6 +146,7 @@ public class ScheduleActivity extends AppCompatActivity {
             }
         });
     }
+
     private void swipeRefresh() {
 
         mySwipeRefreshLayout.setOnRefreshListener(
@@ -141,19 +158,18 @@ public class ScheduleActivity extends AppCompatActivity {
                 }
         );
     }
+
     private void myUpdateOperation() {
         //Reload the data
         final RealmResults<Course> courses = realm.where(Course.class).findAll();
         scheduleAdapter.update(courses);
+        courses.addChangeListener(new RealmChangeListener<RealmResults<Course>>() {
+            @Override
+            public void onChange(@NonNull RealmResults<Course> courses) {
+                scheduleAdapter.update(courses);
+            }
+        });
         mySwipeRefreshLayout.setRefreshing(false);
 
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        realm.close();
-
-    }
-
 }

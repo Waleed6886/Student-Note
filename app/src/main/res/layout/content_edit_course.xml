@@ -8,20 +8,6 @@
     tools:context="com.example.thiqah.studentnotes.EditCourseActivity"
     tools:showIn="@layout/activity_edit_course">
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextCourseName"
-        app:layout_constraintEnd_toStartOf="@+id/editTextCourseName"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editTextCourseName"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/ic_books"
-        tools:ignore="VectorDrawableCompat" />
-
     <EditText
         android:id="@+id/editTextCourseName"
         android:layout_width="320dp"
@@ -43,7 +29,7 @@
 
 
     <LinearLayout
-        android:id="@+id/buttonPickStartTimeAndDate"
+        android:id="@+id/buttonPickDate"
         android:layout_width="320dp"
         android:layout_height="40dp"
         android:layout_marginBottom="8dp"
@@ -65,10 +51,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="11dp"
-            android:text="@string/start" />
+            android:text="@string/date" />
 
         <TextView
-            android:id="@+id/textViewStartDateAndTime"
+            android:id="@+id/textViewDate"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
@@ -77,7 +63,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/buttonPickEndTimeAndDate"
+        android:id="@+id/buttonPickTime"
         android:layout_width="320dp"
         android:layout_height="40dp"
         android:layout_marginBottom="8dp"
@@ -99,13 +85,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="11dp"
-            android:text="@string/end" />
+            android:text="@string/time" />
 
         <TextView
-            android:id="@+id/textViewEndDateAndTime"
+            android:id="@+id/textViewTime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
             android:layout_weight="3"
             android:padding="11dp"
             android:text="textView" />

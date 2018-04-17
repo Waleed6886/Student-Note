@@ -26,6 +26,7 @@ import com.example.thiqah.studentnotes.Model.CourseDate;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,15 +44,13 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
     Realm realm;
 
     EditText editTextCourseName;
-    LinearLayout buttonPickStartTime;
-    @BindView(R.id.buttonPickEndTimeAndDate)
-    LinearLayout buttonPickEndTime;
-    @BindView(R.id.textViewStartDateAndTime)
-    TextView textViewStartDateAndTime;
-    @BindView(R.id.textViewEndDateAndTime)
+
+    LinearLayout buttonPickDate;
+    LinearLayout buttonPickTime;
+
+    TextView textViewDate;
     TextView textViewEndDateAndTime;
     Calendar calendar = Calendar.getInstance();
-
 
 
     int minute;
@@ -86,7 +85,6 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
         initializeLayoutManager();
         initializeAdapter();
         initializeData();
-        fillData();
 
 
         //FAB Button
@@ -103,45 +101,32 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
         Log.v("time", newMonth);
 
 
-        buttonPickStartTime.setOnClickListener(new View.OnClickListener() {
+        buttonPickDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTimeAndDate();
+                pickDate();
             }
         });
 
 
-
-
     }
 
-    private void fillData() {
-        bundle = getIntent().getExtras();
-        if(bundle != null){
-            Course courseData = bundle.getParcelable(COURSE_KEY);
-
-            if (courseData != null){
-                editTextCourseName.setText(courseData.getCourseName());
-
-            }
-        }
-    }
 
     private void initializeViews() {
-        buttonPickStartTime = findViewById(R.id.buttonPickStartTimeAndDate);
+        buttonPickDate = findViewById(R.id.buttonPickDate);
         editTextCourseName = findViewById(R.id.editTextCourseName);
         recyclerView = findViewById(R.id.editRecyclerView);
     }
 
     private void initializeData() {
-        final RealmResults<Course> courses = realm.where(Course.class).findAll();
-        courses.addChangeListener(new RealmChangeListener<RealmResults<Course>>() {
-            @Override
-            public void onChange(@NonNull RealmResults<Course> courses) {
-                editCourseAdapter.update(courses);
-            }
-        });
+        bundle = getIntent().getExtras();
+        if (bundle != null) {
+            Course courseData = bundle.getParcelable(COURSE_KEY);
+            editCourseAdapter.update(courseData);
+        }
     }
+
+
 
     //initialize the adapter
     private void initializeAdapter() {
@@ -150,12 +135,11 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
     }
 
 
-    @OnClick(R.id.buttonPickEndTimeAndDate)
     public void endTimeAndDate() {
 
     }
 
-    public void startTimeAndDate() {
+    public void pickDate() {
         FragmentManager fm = getSupportFragmentManager();
         Bundle bundle = new Bundle();
         Time time = new Time();
@@ -202,7 +186,7 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
                 // Transaction was a success.
                 Log.e(TAG, "execute: success");
                 final RealmResults<Course> courseRealmResults = realm.where(Course.class).findAll();
-                Log.e(TAG, "onSuccess: "+courseRealmResults.size());
+                Log.e(TAG, "onSuccess: " + courseRealmResults.size());
 
             }
         }, new Realm.Transaction.OnError() {
@@ -213,6 +197,7 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
         });
 
     }
+
     //initialize Layout Manger for the adapter
     private void initializeLayoutManager() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -241,6 +226,7 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
         boolean enabled;
         if (!TextUtils.isEmpty(mRrule)) {
             repeatString = EventRecurrenceFormatter.getRepeatString(this, r, mEventRecurrence, true);
+            Log.e(TAG, "populateRepeats: "+repeatString);
         }
 
     }
@@ -251,17 +237,23 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bundle = getIntent().getExtras();
+                if (bundle != null) {
+                    Course courseData = bundle.getParcelable(COURSE_KEY);
+                    edit_in_database(courseData);
+                    editCourseAdapter.update(courseData);
+                }
                 courseName = editTextCourseName.getText().toString();
                 if (!courseName.isEmpty() || !repeatString.isEmpty()) {
                     Course course = realm.where(Course.class).equalTo("courseName", courseName).findFirst();
                     if (((course != null ? course.getCourseName() : null) == courseName)) {
-                        edit_in_database(course, courseName);
+//                        edit_in_database(course, courseName);
                     } else {
                         save_to_database(courseName, repeatString);
                         Snackbar.make(view, "Replace with your own action ", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
-                }else {
+                } else {
                     Snackbar.make(view, "I need data (╯°□°）╯︵ ┻━┻", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
@@ -269,7 +261,20 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
         });
     }
 
-    private void edit_in_database(Course course, String courseName) {
+    private void edit_in_database(Course course) {
+        final Course updateCourse = realm.where(Course.class).equalTo("courseName", course.getCourseName()).findFirst();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                int courseDateSize = updateCourse.getCourseDateRealmList().size();
+                CourseDate courseDate = realm.createObject(CourseDate.class);
+                courseDate.setCourse(updateCourse);
+                }
+        });
+
+
+
     }
 
 

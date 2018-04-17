@@ -24,4 +24,6 @@
     <string name="end">End</string>
     <string name="courseDate">Date</string>
     <string name="delete">Delete</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
 </resources>
