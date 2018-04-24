@@ -11,7 +11,6 @@ public class CourseDate extends RealmObject {
 
     String date;
     String time;
-    Course course;
 
     public String getDate() {
         return date;
@@ -19,10 +18,6 @@ public class CourseDate extends RealmObject {
 
     public String getTime() {
         return time;
-    }
-
-    public Course getCourse() {
-        return course;
     }
 
     public void setDate(String date) {
@@ -33,9 +28,6 @@ public class CourseDate extends RealmObject {
         this.time = time;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
-    }
 }
 
 

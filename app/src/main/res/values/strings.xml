@@ -8,8 +8,8 @@
     <string name="title_activity_student_weekly_schedule">Student Weekly Schedule</string>
     <string name="student_weekly_schedule">Student Weekly Schedule</string>
     <string name="empty">It\'s a bit lonely here...</string>
-    <string name="empty_instruction">Get started by adding a editCourseActivity</string>
-    <string name="empty_desert">empty desert</string>
+    <string name="empty_instruction">Get started by adding a Course</string>
+    <string name="empty_shelves">empty shelves</string>
     <string name="courseName">Course Name</string>
     <string name="courseTime">editCourseActivity time</string>
     <string name="courseDays">Sunday \nMonday</string>
@@ -27,4 +27,7 @@
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="error_field_required">This field is required :)</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

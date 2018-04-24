@@ -24,7 +24,7 @@ import static android.support.constraint.Constraints.TAG;
 
 public class EditCourseAdapter extends RecyclerView.Adapter<EditCourseAdapter.EditCourseViewHolder> {
 
-    private List<Course> courseList = new ArrayList<>();
+    private Course course;
     private RealmList<CourseDate> results = new RealmList<CourseDate>();
 
     EditCourseAdapter() {
@@ -37,19 +37,17 @@ public class EditCourseAdapter extends RecyclerView.Adapter<EditCourseAdapter.Ed
 
     @Override
     public void onBindViewHolder(EditCourseViewHolder holder, int position) {
-        Course course = courseList.get(position);
-        if (course != null) {
+        CourseDate courseDate = results.get(position);
+        if (courseDate != null) {
             holder.textViewName.setText(course.getCourseName());
-            if (course.getCourseDateRealmList() != null) {
-                holder.textViewTime.setText(Objects.requireNonNull(course.getCourseDateRealmList().get(position)).getTime());
-                holder.textViewDate.setText(Objects.requireNonNull(course.getCourseDateRealmList().get(position)).getDate());
-            }
+            holder.textViewTime.setText(Objects.requireNonNull(courseDate.getTime()));
+            holder.textViewDate.setText(Objects.requireNonNull(courseDate.getDate()));
         }
     }
 
     @Override
     public int getItemCount() {
-        return courseList.size();
+        return results.size();
     }
 
     class EditCourseViewHolder extends RecyclerView.ViewHolder {
@@ -66,11 +64,9 @@ public class EditCourseAdapter extends RecyclerView.Adapter<EditCourseAdapter.Ed
     }
 
     public void update(Course course) {
-        Log.e(TAG, "getItemCount: "+ course.getCourseDateRealmList());
-
-        this.courseList.clear();
-        this.courseList.add(course);
-//        this.results.addAll(course.getCourseDateRealmList());
+        this.course = course;
+        this.results.clear();
+        this.results.addAll(course.getCourseDateRealmList());
         notifyDataSetChanged();
     }
 

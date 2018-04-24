@@ -29,8 +29,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_alarm" />
-                            <entry key="sourceFile" value="C:\Users\Thiqah\AndroidStudioProjects\StudentNotes\app\src\main\res\drawable\alarm.svg" />
+                            <entry key="outputName" value="ic_shelves" />
+                            <entry key="sourceFile" value="C:\Users\Thiqah\AndroidStudioProjects\StudentNotes\app\src\main\res\drawable\shelves.svg" />
                           </map>
                         </option>
                       </PersistentState>
