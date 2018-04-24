@@ -13,7 +13,8 @@ import io.realm.annotations.PrimaryKey;
 
 public class Course extends RealmObject implements Parcelable {
 
-
+    @PrimaryKey
+    private int primaryKey;
     private String courseName;
     private RealmList<CourseDate> courseDateRealmList;
 
@@ -21,7 +22,19 @@ public class Course extends RealmObject implements Parcelable {
     }
 
     protected Course(Parcel in) {
+        primaryKey = in.readInt();
         courseName = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(primaryKey);
+        dest.writeString(courseName);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {
@@ -36,6 +49,10 @@ public class Course extends RealmObject implements Parcelable {
         }
     };
 
+    public int getPrimaryKey() {
+        return primaryKey;
+    }
+
     public String getCourseName() {
         return courseName;
     }
@@ -44,23 +61,15 @@ public class Course extends RealmObject implements Parcelable {
         return courseDateRealmList;
     }
 
-    public void setCourseDateRealmList(RealmList<CourseDate> courseDateRealmList) {
-        this.courseDateRealmList = courseDateRealmList;
+    public void setPrimaryKey(int primaryKey) {
+        this.primaryKey = primaryKey;
     }
-
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(courseName);
+    public void setCourseDateRealmList(RealmList<CourseDate> courseDateRealmList) {
+        this.courseDateRealmList = courseDateRealmList;
     }
 }

@@ -15,23 +15,23 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
 
-
         </activity>
         <activity
             android:name=".ScheduleActivity"
             android:label="@string/title_activity_student_weekly_schedule"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".EditCourseActivity"
             android:label="@string/title_activity_crudcourse"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize"></activity>
     </application>
 
 </manifest>

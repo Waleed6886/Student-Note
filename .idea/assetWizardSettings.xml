@@ -28,8 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_add_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\Thiqah" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_alarm" />
+                            <entry key="sourceFile" value="C:\Users\Thiqah\AndroidStudioProjects\StudentNotes\app\src\main\res\drawable\alarm.svg" />
                           </map>
                         </option>
                       </PersistentState>
