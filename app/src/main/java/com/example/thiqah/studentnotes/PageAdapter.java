@@ -2,11 +2,16 @@ package com.example.thiqah.studentnotes;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class PageAdapter extends FragmentStatePagerAdapter{
+public class PageAdapter extends FragmentPagerAdapter {
 
     int numberOfTabs;
+
+    TabNoteFragment tabNoteFragment = new TabNoteFragment();
+    TabPhotoFragment tabPhotoFragment = new TabPhotoFragment();
+    TabDrawFragment tabDrawFragment = new TabDrawFragment();
 
     public PageAdapter(FragmentManager fm, int NumberOfTabs) {
         super(fm);
@@ -15,19 +20,20 @@ public class PageAdapter extends FragmentStatePagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
+        switch (position) {
             case 0:
-                TabNoteFragment tabNoteFragment = new TabNoteFragment();
                 return tabNoteFragment;
             case 1:
-                TabPhotoFragment tabPhotoFragment = new TabPhotoFragment();
+                return tabPhotoFragment;
+            case 2:
+                return tabDrawFragment;
+            default:
                 return tabPhotoFragment;
         }
-        return null;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return numberOfTabs;
     }
 }

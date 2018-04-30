@@ -1,9 +1,13 @@
 package com.example.thiqah.studentnotes;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        TabDrawFragment.OnFragmentInteractionListener,
+        TabNoteFragment.OnFragmentInteractionListener,
+        TabPhotoFragment.OnFragmentInteractionListener{
 
 
 
@@ -33,6 +40,9 @@ public class MainActivity extends AppCompatActivity
         //set Tool bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //set TabLayout and Viewpager
+        setTabLayout();
 
         //set Floating button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -53,6 +63,37 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void setTabLayout() {
+        TabLayout tabLayout = findViewById(R.id.tablayout);
+        tabLayout.addTab(tabLayout.newTab().setText("Note"));
+        tabLayout.addTab(tabLayout.newTab().setText("Photo"));
+        tabLayout.addTab(tabLayout.newTab().setText("Draw"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = findViewById(R.id.pager);
+        PagerAdapter pagerAdapter = new PageAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
 
     @Override
@@ -113,5 +154,8 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
+    }
 }

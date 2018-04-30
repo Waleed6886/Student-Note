@@ -203,7 +203,7 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
                     if (bundle != null) {
                         Course bundleCourse = bundle.getParcelable(COURSE_KEY);
                         edit_in_database(bundleCourse);
-                        Course course = realm.where(Course.class).equalTo("courseName",bundleCourse.getCourseName()).findFirst();
+                        Course course = realm.where(Course.class).equalTo("courseName", bundleCourse.getCourseName()).findFirst();
                         editCourseAdapter.update(course);
                     }
                     courseName = editTextCourseName.getText().toString();
@@ -214,7 +214,10 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
                     } else {
                         save_to_database(courseName, hour, minute);
                     }
-
+                    Course retrieveCourse = realm.where(Course.class).equalTo("courseName", courseName).findFirst();
+                    if (retrieveCourse != null) {
+                        editCourseAdapter.update(retrieveCourse);
+                    }
                 }
             }
         });
@@ -232,11 +235,10 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
                 courseDate.setDate(days);
                 courseDate.setTime(String.valueOf(hour + ":" + minute));
 
-
                 Course course = bgRealm.createObject(Course.class, pk);
                 course.setCourseName(courseName);
-
                 course.getCourseDateRealmList().add(courseDate);
+
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override
@@ -254,6 +256,8 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
                 Log.e(TAG, "onError: something went wrong ", error.fillInStackTrace());
             }
         });
+        Course course = realm.where(Course.class).equalTo("courseName", courseName).findFirst();
+        editCourseAdapter.update(course);
     }
 
     private void edit_in_database(final Course course) {
@@ -263,7 +267,7 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
                 CourseDate courseDate = realm.createObject(CourseDate.class);
                 courseDate.setDate(days);
                 courseDate.setTime(String.valueOf(hour + ":" + minute));
-                
+
                 course.getCourseDateRealmList().add(courseDate);
 
                 Log.e(TAG, "execute: edit");

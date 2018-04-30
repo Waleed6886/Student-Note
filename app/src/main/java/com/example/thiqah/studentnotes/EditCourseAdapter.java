@@ -66,7 +66,9 @@ public class EditCourseAdapter extends RecyclerView.Adapter<EditCourseAdapter.Ed
     public void update(Course course) {
         this.course = course;
         this.results.clear();
-        this.results.addAll(course.getCourseDateRealmList());
+        if (course != null) {
+            this.results.addAll(course.getCourseDateRealmList());
+        }
         notifyDataSetChanged();
     }
 
