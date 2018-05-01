@@ -10,9 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -155,10 +157,13 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
     }
 
 
+
+
     //initialize the adapter
     private void initializeAdapter() {
         editCourseAdapter = new EditCourseAdapter();
         recyclerView.setAdapter(editCourseAdapter);
+
     }
 
     public void pickDate() {

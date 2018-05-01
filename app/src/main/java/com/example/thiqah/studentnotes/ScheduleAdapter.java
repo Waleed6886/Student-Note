@@ -1,6 +1,5 @@
 package com.example.thiqah.studentnotes;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,21 +7,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.example.thiqah.studentnotes.Model.Course;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import butterknife.ButterKnife;
 import io.realm.RealmResults;
 
 
 public class ScheduleAdapter extends EmptyRecyclerView.Adapter<ScheduleAdapter.CourseViewHolder> {
 
-    private List<Course> courseList = new ArrayList<>();
+    public List<Course> courseList = new ArrayList<>();
 
     ScheduleAdapter() {
     }
@@ -46,12 +41,25 @@ public class ScheduleAdapter extends EmptyRecyclerView.Adapter<ScheduleAdapter.C
         return courseList.size();
     }
 
-    class CourseViewHolder extends RecyclerView.ViewHolder{
-        private TextView textViewCourseName;
+    public void removeItem (int position){
+        courseList.remove(position);
+        notifyItemRemoved(position);
+    }
+    public void restoreItem (Course course, int position){
+        courseList.add(position,course);
+        notifyItemInserted(position);
+    }
 
+    public class CourseViewHolder extends RecyclerView.ViewHolder{
+        public TextView textViewCourseName;
+        public RelativeLayout RelativeLayoutViewBackground,RelativeLayoutViewForeground;
         CourseViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewCourseName = itemView.findViewById(R.id.textViewCourseName);
+            RelativeLayoutViewBackground = itemView.findViewById(R.id.view_background);
+            RelativeLayoutViewForeground = itemView.findViewById(R.id.view_foreground);
+
+
         }
 
         public void setOnClick(final int position) {

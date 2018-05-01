@@ -1,32 +1,47 @@
 package com.example.thiqah.studentnotes;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.thiqah.studentnotes.Helper.RecyclerItemTouchHelper;
+import com.example.thiqah.studentnotes.Helper.RecyclerItemTouchHelperListener;
 import com.example.thiqah.studentnotes.Model.Course;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class ScheduleActivity extends AppCompatActivity {
+public class ScheduleActivity extends AppCompatActivity implements RecyclerItemTouchHelperListener {
 
-    EmptyRecyclerView recyclerView;
-    ScheduleAdapter scheduleAdapter;
+    private static final String TAG = "ScheduleActivity";
+    private EmptyRecyclerView recyclerView;
+    private ScheduleAdapter scheduleAdapter;
     private Handler mHandler;
+    private CoordinatorLayout rootLayout;
     private final static int DELAY = 3000;
+    private List<Course> courseList;
 
     private Realm realm;
     SwipeRefreshLayout mySwipeRefreshLayout;
@@ -48,7 +63,7 @@ public class ScheduleActivity extends AppCompatActivity {
         initializeViews();
         initializeAdapter();
         initializeData();
-        }
+    }
 
     @Override
     protected void onResume() {
@@ -69,6 +84,7 @@ public class ScheduleActivity extends AppCompatActivity {
         realm.close();
 
     }
+
     //initialize Views
     private void initializeViews() {
         recyclerView = findViewById(R.id.recycler_view);
@@ -77,16 +93,37 @@ public class ScheduleActivity extends AppCompatActivity {
         setToolbar();
         setFloatingButton();
     }
+
     //initialize the adapter
     private void initializeAdapter() {
         scheduleAdapter = new ScheduleAdapter();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setEmptyView(findViewById(R.id.empty_view));
+        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayoutSchedule);
+        courseList = new ArrayList<>();
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(scheduleAdapter);
+
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
+        //requesting data from database
+        addItemToCart();
 
         mHandler = new Handler();
     }
+
+    private void addItemToCart() {
+        RealmResults<Course> courseList = realm.where(Course.class).findAll();
+        this.courseList.clear();
+        this.courseList.addAll(courseList);
+        scheduleAdapter.notifyDataSetChanged();
+    }
+
     //initialize data
     private void initializeData() {
         myUpdateOperation();
@@ -97,7 +134,7 @@ public class ScheduleActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ScheduleActivity.this,EditCourseActivity.class);
+                Intent intent = new Intent(ScheduleActivity.this, EditCourseActivity.class);
                 startActivity(intent);
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -171,5 +208,32 @@ public class ScheduleActivity extends AppCompatActivity {
         });
         mySwipeRefreshLayout.setRefreshing(false);
 
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof ScheduleAdapter.CourseViewHolder) {
+            String name = courseList.get(viewHolder.getAdapterPosition()).getCourseName();
+
+            final Course deletedCourse = courseList.get(viewHolder.getAdapterPosition());
+            final int deleteIndex = viewHolder.getAdapterPosition();
+
+            scheduleAdapter.removeItem(deleteIndex);
+
+            Snackbar snackbar = Snackbar.make(rootLayout, "removed a course ", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    scheduleAdapter.restoreItem(deletedCourse, deleteIndex);
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+            if (!snackbar.isShown()) {
+                // TODO: 5/1/2018 if the user didn't undo his action remove it from database 
+
+
+            }
+        }
     }
 }
