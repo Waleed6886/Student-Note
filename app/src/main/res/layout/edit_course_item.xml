@@ -2,17 +2,23 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/textViewEditCourseTime"
         android:layout_width="94dp"
-        android:layout_height="35dp"
+        android:layout_height="34dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="8dp"
         android:text="@string/courseTime"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewEditCourseDate"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.157"
+        app:layout_constraintStart_toEndOf="@+id/textViewEditCourseDate"
+        app:layout_constraintTop_toTopOf="@+id/textViewEditCourseDate"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -33,10 +39,10 @@
 
     <TextView
         android:id="@+id/textViewEditCourseDate"
-        android:layout_width="94dp"
+        android:layout_width="100dp"
         android:layout_height="36dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="144dp"
+        android:layout_marginEnd="152dp"
         android:text="@string/courseDate"
         app:layout_constraintBottom_toBottomOf="@+id/textViewEditCourseName"
         app:layout_constraintEnd_toEndOf="parent"

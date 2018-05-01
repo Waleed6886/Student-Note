@@ -11,7 +11,7 @@
     <string name="empty_instruction">Get started by adding a Course</string>
     <string name="empty_shelves">empty shelves</string>
     <string name="courseName">Course Name</string>
-    <string name="courseTime">editCourseActivity time</string>
+    <string name="courseTime">Course time</string>
     <string name="courseDays">Sunday \nMonday</string>
     <string name="title_activity_crudcourse">Course</string>
     <string name="pick_time">Pick time</string>

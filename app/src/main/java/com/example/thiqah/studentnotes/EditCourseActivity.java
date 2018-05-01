@@ -202,17 +202,18 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
                     bundle = getIntent().getExtras();
                     if (bundle != null) {
                         Course bundleCourse = bundle.getParcelable(COURSE_KEY);
-                        edit_in_database(bundleCourse);
                         Course course = realm.where(Course.class).equalTo("courseName", bundleCourse.getCourseName()).findFirst();
-                        editCourseAdapter.update(course);
-                    }
-                    courseName = editTextCourseName.getText().toString();
-                    Course course = realm.where(Course.class).equalTo("courseName", courseName).findFirst();
-
-                    if (((course != null ? course.getCourseName() : null) == courseName)) {
                         edit_in_database(course);
+                        editCourseAdapter.update(course);
                     } else {
-                        save_to_database(courseName, hour, minute);
+                        courseName = editTextCourseName.getText().toString();
+                        Course course = realm.where(Course.class).equalTo("courseName", courseName).findFirst();
+
+                        if (course != null && course.getCourseName().equals(courseName)) {
+                            edit_in_database(course);
+                        } else {
+                            save_to_database(courseName, hour, minute);
+                        }
                     }
                     Course retrieveCourse = realm.where(Course.class).equalTo("courseName", courseName).findFirst();
                     if (retrieveCourse != null) {
@@ -228,36 +229,18 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
         final RealmResults<Course> courseList = realm.where(Course.class).findAll();
         final int pk = courseList.size() + 1;
 
-        realm.executeTransactionAsync(new Realm.Transaction() {
+        realm.executeTransaction(new Realm.Transaction() {
             @Override
-            public void execute(@NonNull Realm bgRealm) {
-                CourseDate courseDate = bgRealm.createObject(CourseDate.class);
+            public void execute(Realm realm) {
+                CourseDate courseDate = realm.createObject(CourseDate.class);
                 courseDate.setDate(days);
                 courseDate.setTime(String.valueOf(hour + ":" + minute));
 
-                Course course = bgRealm.createObject(Course.class, pk);
+                Course course = realm.createObject(Course.class, pk);
                 course.setCourseName(courseName);
                 course.getCourseDateRealmList().add(courseDate);
-
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                // Transaction was a success.
-                Log.e(TAG, "execute: success");
-                final RealmResults<Course> courseRealmResults = realm.where(Course.class).findAll();
-                Log.e(TAG, "onSuccess: " + courseRealmResults.size());
-
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
-                // Transaction failed and was automatically canceled.
-                Log.e(TAG, "onError: something went wrong ", error.fillInStackTrace());
             }
         });
-        Course course = realm.where(Course.class).equalTo("courseName", courseName).findFirst();
-        editCourseAdapter.update(course);
     }
 
     private void edit_in_database(final Course course) {
@@ -277,26 +260,29 @@ public class EditCourseActivity extends AppCompatActivity implements RecurrenceP
 
     private boolean check_if_empty() {
         String courseName = editTextCourseName.getText().toString();
+        View view = findViewById(R.id.activity_main);
+
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid email address.
+        // Check for a course name is empty or not
         if (TextUtils.isEmpty(courseName)) {
             editTextCourseName.setError(getString(R.string.error_field_required));
             focusView = editTextCourseName;
             cancel = true;
-        } else if (TextUtils.isEmpty(days)) {
+        }
+        if (days == null) {
 
-            Snackbar.make(this.getWindow().getDecorView(), "you need to pick a date ", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "you need to pick a date ", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else if (hour == 0) {
-            Snackbar.make(this.getWindow().getDecorView(), "you need to pick a time ", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "you need to pick a time ", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
         if (cancel) {
             focusView.requestFocus();
-        } else {
+        } else if (days != null && hour != 0 && cancel == false) {
 
             return true;
 
