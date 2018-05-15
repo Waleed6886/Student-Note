@@ -213,26 +213,31 @@ public class ScheduleActivity extends AppCompatActivity implements RecyclerItemT
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof ScheduleAdapter.CourseViewHolder) {
-            String name = courseList.get(viewHolder.getAdapterPosition()).getCourseName();
+            try {
 
-            final Course deletedCourse = courseList.get(viewHolder.getAdapterPosition());
-            final int deleteIndex = viewHolder.getAdapterPosition();
+                String name = courseList.get(viewHolder.getAdapterPosition()).getCourseName();
+                final Course deletedCourse = courseList.get(viewHolder.getAdapterPosition());
+                final int deleteIndex = viewHolder.getAdapterPosition();
 
-            scheduleAdapter.removeItem(deleteIndex);
+                scheduleAdapter.removeItem(deleteIndex);
 
-            Snackbar snackbar = Snackbar.make(rootLayout, "removed a course ", Snackbar.LENGTH_LONG);
-            snackbar.setAction("UNDO", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    scheduleAdapter.restoreItem(deletedCourse, deleteIndex);
+                Snackbar snackbar = Snackbar.make(rootLayout, "removed a course ", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        scheduleAdapter.restoreItem(deletedCourse, deleteIndex);
+                    }
+                });
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+                if (!snackbar.isShown()) {
+                    // TODO: 5/1/2018 if the user didn't undo his action remove it from database
+
                 }
-            });
-            snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();
-            if (!snackbar.isShown()) {
-                // TODO: 5/1/2018 if the user didn't undo his action remove it from database 
-
-
+                addItemToCart();
+            }catch (IndexOutOfBoundsException e){
+                Log.e(TAG, "onSwiped: -_-",e);
+                Snackbar.make(rootLayout, " Crash Index out of bound -_-  ", Snackbar.LENGTH_LONG).show();
             }
         }
     }

@@ -7,21 +7,10 @@
     tools:context=".TabPhotoFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextureView
-        android:id="@+id/cameraView"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="58dp" />
-
-    <ImageButton
-        android:id="@+id/btnCapture"
-        android:layout_width="61dp"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/ic_menu_camera" />
+        android:text="photo Fragment"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
